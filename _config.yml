@@ -1,11 +1,44 @@
-title: Mo Shan's Notes 
-remote_theme: chesterhow/tale
+# Site settings
+title:          Zhanhong Cheng
+description:    "Home"
+# baseurl:        "/tale"
+url:            "https://chengzhanhong.github.io"
 
-permalink:    /:year-:month-:day/:title
-paginate:     5
+# Google Analytics
+# google_analytics: G-F3HF3GB75L
 
+# Author
+author:
+  name:         Zhanhong Cheng
+  url:          https://chengzhanhong.github.io
+  email:        chengzhanhong@mail.mcgill.ca
+
+# Build settings
+markdown: kramdown
+kramdown:
+    math_engine: katex
+include:
+  - _pages
+
+# Assets
+sass:
+  sass_dir:     _sass
+  style:        compressed
+
+# Gems
 plugins:
-  - jekyll-paginate
-  - jekyll-remote-theme
   - jekyll-feed
+  - jekyll-paginate
   - jekyll-seo-tag
+  - jemoji #Uncomment this to allow emoji in your post
+
+# Permalinks
+paginate:       5
+permalink:      /:year-:month-:day/:title
+paginate_path: "/posts/page:num/"
+
+# Excludes
+exclude: [ Gemfile, Gemfile.lock, tale.gemspec ]
+
+# Disqus (Set to your disqus id)
+disqus:         jekyll-tale
