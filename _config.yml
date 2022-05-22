@@ -1,22 +1,20 @@
 # Site settings
-title:          Zhanhong Cheng
-description:    "Home"
-# baseurl:        "/tale"
-url:            "https://chengzhanhong.github.io"
+title:          Tale
+description:    "Minimal Jekyll theme for storytellers"
+baseurl:        "/tale"
+url:            "https://chesterhow.github.io"
 
 # Google Analytics
-# google_analytics: G-F3HF3GB75L
+google_analytics: UA—XXXXXXXX-X
 
 # Author
 author:
-  name:         Zhanhong Cheng
-  url:          https://chengzhanhong.github.io
-  email:        chengzhanhong@mail.mcgill.ca
+  name:         Chester How
+  url:          https://chester.how
+  email:        chesterhow@gmail.com
 
 # Build settings
-markdown: kramdown
-kramdown:
-    math_engine: katex
+markdown:       kramdown
 include:
   - _pages
 
@@ -30,12 +28,11 @@ plugins:
   - jekyll-feed
   - jekyll-paginate
   - jekyll-seo-tag
-  - jemoji #Uncomment this to allow emoji in your post
+  # - jemoji #Uncomment this to allow emoji in your post
 
 # Permalinks
-paginate:       5
 permalink:      /:year-:month-:day/:title
-paginate_path: "/posts/page:num/"
+paginate:       5
 
 # Excludes
 exclude: [ Gemfile, Gemfile.lock, tale.gemspec ]
