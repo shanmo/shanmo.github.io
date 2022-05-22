@@ -1,0 +1,3 @@
+## About 
+
+- my technical notes 
