@@ -226,7 +226,9 @@ src/chtholly_tree.rs
 src/lib.rs
 ```
 
-The output for `cargo publish --dry-run` says `warning: aborting upload due to dry run`, and there are no errors, time to publish it! The crate is accessible right after you hit publish. For instance, check out mine [here](https://crates.io/crates/chtholly_tree). 
+The output for `cargo publish --dry-run` says `warning: aborting upload due to dry run`, and there are no errors, time to publish it! The crate is accessible right after you hit publish. For instance, check out mine [here](https://crates.io/crates/chtholly_tree), and the doc is included [here](https://docs.rs/chtholly_tree/0.1.0/chtholly_tree/). 
+
+You cannot delete or modify the version you published, but you can publish a new version. In my case, I found that the documentation is not generated since I did not put my functions in the `lib.rs` file, so I modified that and published a new one. The update on crates.io is instant but not on `https://docs.rs/`.  After about 5 minutes, the doc is updated [here](https://docs.rs/chtholly_tree/1.0.0/chtholly_tree/#). 
 
 ## Reference 
 
