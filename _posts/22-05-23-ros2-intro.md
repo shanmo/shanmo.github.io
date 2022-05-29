@@ -1,5 +1,5 @@
 ---
-https://www.luogu.com.cn/blog/blaze/solution-cf896clayout: post
+layout: post
 title: "Introduction to ROS2 with Rust"
 author: "Timothy Shan"
 tags: ros2
