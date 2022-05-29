@@ -207,10 +207,6 @@ use rclrust::{qos::QoSProfile, rclrust_info};
 use rclrust_msg::std_msgs::msg::String as String_;
 use rclrust_msg::std_msgs::msg::UInt8 as u8_;
 
-struct Billy {
-
-}
-
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let ctx = rclrust::init()?;
@@ -238,7 +234,7 @@ async fn main() -> anyhow::Result<()> {
 
 The blog publisher node needs to be modified to receive the reward as follows 
 
-```
+```rust
 use std::{thread::sleep, time::Duration};
 use std::sync::Arc;
 
@@ -284,7 +280,9 @@ And the output includes the reward message
 [INFO] [1653829848.329881922] [watson_blog]: I received $10 reward
 ```
 
+## Summary 
 
+That's it for a quick introduction, which covers how to write publishers and subscribers. One thing to note is that unlike the Python or C++ examples for ROS/ROS2, there are no callback functions in the Rust ones, since the function is async, as mentioned [here](https://github.com/adnanademovic/rosrust/issues/121). 
 
 ## Reference 
 
