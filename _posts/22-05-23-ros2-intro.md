@@ -7,15 +7,15 @@ tags: ros2
 
 ## Introduction 
 
-In May 2022, ROS 2 Humble Hawksbill (humble) was released, which supports Ubuntu 22.04. Since I am still using Ubuntu 20.04, this blog will focus on `ROS 2 Galactic Geochelone` (galactic) instead, released in May, 2021. 
+In May 2022, ROS 2 Humble Hawksbill (humble) was released, which supports Ubuntu 22.04. Since I am still using Ubuntu 20.04, this blog will focus on `foxy`. 
 
 First thing first, how to install ROS2? Because our team is migrating from ROS1 to ROS2, I need to use both for now. My current way is to install ROS2 on my OS following the [official guide](https://docs.ros.org/en/galactic/Installation.html), and install ROS1 via `mamba` using [RoboStack](https://robostack.github.io/). Even though RoboStack also provides `ros-galactic-desktop`, I do not recommend it since the package support is not complete, and does not work well with Python APIs. 
 
 One may wonder whether there is a way to just taste the flavour of ROS2, see whether one likes it, before diving into the full-scale installation. There are [docker files](https://github.com/athackst/dockerfiles) for those who have nvidia GPU, whereas [this repo](https://github.com/Tiryoh/docker-ros2-desktop-vnc) provides docker files for CPU and VNC. The one used in this blog is the VNC version. After pulling and building the docker file, use a browser to connect to `http://127.0.0.1:6080/`, which shows the desktop. Also need to take care of the the permission issue via `sudo chmod 777 -R ~/.ros/` and you are good to go. 
 
-For the Rust interface, I am going to use [r2r](https://github.com/sequenceplanner/r2r), which has examples on how to use `tokio`. Other Rust interfaces are also available, such as [ros2_rust](https://github.com/ros2-rust/ros2_rust), which in active development, but does not support tokio yet. The code for this blog is in [this repo](https://github.com/shanmo/learn-ros2). 
-
 ## Hello World
+
+For the Rust interface of this section, I am going to use [r2r](https://github.com/sequenceplanner/r2r), which has examples on how to use `tokio`. Other Rust interfaces are also available, such as [ros2_rust](https://github.com/ros2-rust/ros2_rust), which in active development, but does not support tokio yet. The code for this blog is in [this repo](https://github.com/shanmo/learn-ros2). 
 
 Let's begin with the good old `hello world` example. First, create a cargo binary package
 
@@ -95,7 +95,73 @@ data: hello world
 
 ## A simple publisher
 
-I am a fan of `Sherlock Holmes` so I will use that as an example, especially the [one filed by BBC](https://www.bbc.co.uk/programmes/b018ttws).  
+I am a fan of `Sherlock Holmes` so I will use that as an example, especially the [one filed by BBC](https://www.bbc.co.uk/programmes/b018ttws). In the TV series, John Watson writes blogs about the cases Sherlock is dealing with. So let's create a publisher to publish Watson's blog, by 
+
+```
+cargo new watson --bin
+```
+
+The Rust interface used in this section is [rclrust](https://github.com/rclrust/rclrust), wich also supports `tokio`. Note that we can also create a Rust Client from scratch as shown [here](https://marshalshi.medium.com/create-a-rust-client-for-ros2-from-scratch-part-1-1-create-the-dynamic-library-via-cmake-empy-a93f78ae90d1). We need to define the dependencies in the Cargo.toml as 
+
+```rust
+[package]
+name = "watson"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rclrust = { git = "https://github.com/rclrust/rclrust.git", features = ["foxy"] }
+rclrust-msg = { git = "https://github.com/rclrust/rclrust.git" }
+tokio = { version = "1", features = ["full"] }
+anyhow = "1.0"
+```
+
+In code above, we can specify the ROS2 version for `rclrust` via cargo features. We also need to include `rclrust-msg`. 
+
+The publisher code is 
+
+```rust
+use std::{thread::sleep, time::Duration};
+
+use anyhow::Result;
+use rclrust::{qos::QoSProfile, rclrust_info};
+use rclrust_msg::std_msgs::msg::String as String_;
+
+fn main() -> Result<()> {
+    let ctx = rclrust::init()?;
+    let node = ctx.create_node("watson_blog")?;
+    let logger = node.logger();
+    let publisher = node.create_publisher::<String_>("message", &QoSProfile::default())?;
+
+    let mut count = 1; 
+    loop {
+        publisher.publish(&String_ {
+            data: format!("Publish Watson's {}th blog", count),
+        })?;
+        rclrust_info!(logger, "Watson's {}th blog published", count);
+        count += 1; 
+        sleep(Duration::from_millis(100));
+    }
+
+    Ok(())
+}
+```
+
+Output will be 
+
+```
+[INFO] [1653823142.928885221] [watson_blog]: Watson's 1th blog published
+[INFO] [1653823143.029225096] [watson_blog]: Watson's 2th blog published
+[INFO] [1653823143.129426721] [watson_blog]: Watson's 3th blog published
+[INFO] [1653823143.230213513] [watson_blog]: Watson's 4th blog published
+[INFO] [1653823143.330655138] [watson_blog]: Watson's 5th blog published
+```
+
+
+
+
 
 ## Reference 
 
