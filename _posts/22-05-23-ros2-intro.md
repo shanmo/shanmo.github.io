@@ -133,12 +133,12 @@ fn main() -> Result<()> {
     let ctx = rclrust::init()?;
     let node = ctx.create_node("watson_blog")?;
     let logger = node.logger();
-    let publisher = node.create_publisher::<String_>("message", &QoSProfile::default())?;
+    let publisher = node.create_publisher::<String_>("blog", &QoSProfile::default())?;
 
     let mut count = 1; 
     loop {
         publisher.publish(&String_ {
-            data: format!("Publish Watson's {}th blog", count),
+            data: format!("Watson's {}th blog", count),
         })?;
         rclrust_info!(logger, "Watson's {}th blog published", count);
         count += 1; 
@@ -159,7 +159,130 @@ Output will be
 [INFO] [1653823143.330655138] [watson_blog]: Watson's 5th blog published
 ```
 
+More examples could be found in [rclrust-examples](https://github.com/rclrust/rclrust-examples). 
 
+## A simple subscriber 
+
+A young man named Billy who lives at Baker Street enjoys reading Watson's blogs very much, so let's write a subscriber for Billy. The code is below 
+
+```rust
+use std::sync::Arc;
+
+use rclrust::{qos::QoSProfile, rclrust_info};
+use rclrust_msg::std_msgs::msg::String as String_;
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    let ctx = rclrust::init()?;
+    let mut node = ctx.create_node("billy_reader")?;
+    let logger = node.logger();
+
+    let _subscription = node.create_subscription(
+        "blog",
+        move |msg: Arc<String_>| {
+            rclrust_info!(logger, "I read: {}", msg.data);
+        },
+        &QoSProfile::default(),
+    )?;
+
+    node.wait();
+    Ok(())
+}
+```
+
+We need to run both publisher and subscriber, the output is 
+
+```
+[INFO] [1653826256.633754176] [billy_reader]: I read: Watson's 2th blog
+[INFO] [1653826256.734067551] [billy_reader]: I read: Watson's 3th blog
+[INFO] [1653826256.835288093] [billy_reader]: I read: Watson's 4th blog
+```
+
+Billy likes the blogs so much that he pays a little reward after reading each one. We need to publish an `u8` type to handle this feature as follows
+
+```rust
+use std::sync::Arc;
+
+use rclrust::{qos::QoSProfile, rclrust_info};
+use rclrust_msg::std_msgs::msg::String as String_;
+use rclrust_msg::std_msgs::msg::UInt8 as u8_;
+
+struct Billy {
+
+}
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    let ctx = rclrust::init()?;
+    let mut node = ctx.create_node("billy_reader")?;
+    let logger = node.logger();
+    let publisher = node.create_publisher::<u8_>("reward", &QoSProfile::default())?;
+    let reward: u8 = 10; 
+
+    let _subscription = node.create_subscription(
+        "blog",
+        move |msg: Arc<String_>| {
+            rclrust_info!(logger, "I read: {}", msg.data);
+            publisher.publish(&u8_ {
+                data: reward,
+            }).unwrap();
+            rclrust_info!(logger, "I paid: {} for the blog", reward);
+        },
+        &QoSProfile::default(),
+    )?;
+
+    node.wait();
+    Ok(())
+}
+```
+
+The blog publisher node needs to be modified to receive the reward as follows 
+
+```
+use std::{thread::sleep, time::Duration};
+use std::sync::Arc;
+
+use anyhow::Result;
+use rclrust::{qos::QoSProfile, rclrust_info};
+use rclrust_msg::std_msgs::msg::String as String_;
+use rclrust_msg::std_msgs::msg::UInt8 as u8_;
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    let ctx = rclrust::init()?;
+    let mut node = ctx.create_node("watson_blog")?;
+    let logger = node.logger();
+    let publisher = node.create_publisher::<String_>("blog", &QoSProfile::default())?;
+
+    let _subscription = node.create_subscription(
+        "reward",
+        move |msg: Arc<u8_>| {
+            rclrust_info!(logger, "I received ${} reward", msg.data);
+        },
+        &QoSProfile::default(),
+    )?;
+
+    let logger = node.logger();
+    let mut count = 1; 
+    loop {
+        publisher.publish(&String_ {
+            data: format!("Watson's {}th blog", count),
+        })?;
+        rclrust_info!(logger, "Watson's {}th blog published", count);
+        count += 1; 
+        sleep(Duration::from_millis(100));
+    }
+
+    Ok(())
+}
+```
+
+And the output includes the reward message 
+
+```
+[INFO] [1653829848.327928005] [watson_blog]: Watson's 79th blog published
+[INFO] [1653829848.329881922] [watson_blog]: I received $10 reward
+```
 
 
 
