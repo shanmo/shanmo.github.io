@@ -22,7 +22,7 @@ Each node in Chtholly Tree has an interval parameterized by `[left, right]`, and
 - Another method is `assign`, given an interval `[left, right]` with a value, we first find all intervals of the tree within this range, and then merge them and update their value to the given one. 
 
 The implementation in Python is below:
-```python3 
+```python
 class TreeNode:
     def __init__(self, l, r, v):
         self.left = l
