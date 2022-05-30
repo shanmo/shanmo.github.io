@@ -584,7 +584,7 @@ The admin account created for this workshop only lasts for three days, and does 
 - the user can create an instance that has M1 chip from Apple, since AWS has collaborated with Apple
 - Netflix uses AWS to do the graphics rendering, so all the work is done in the cloud
 
-
+That's the end of the workshop, folks! 
 
 
 
