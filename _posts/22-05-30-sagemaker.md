@@ -29,7 +29,7 @@ ML cannot work with categorical data, so it needs to be converted using one-hot 
 
 Without using a feature store, we need to have standalone feature engineering for each new model. The process can be simplified with a feature store, by buiding features once, and reuse them across teams and models. The centralized store is kind of like a repository, where the users can search, reuse, train data, and has low-latency serving and train-infer consistency. There are two types for feature store, online and offline. The online version supports low millisecond latency reads, whereas the offline one supports batch predictions and model training, high throughput reads. 
 
-## Workshop Setup & Lab 1 
+## Workshop Setup 
 
 The event engine is at `dashboard.eventengine.run/login`, and then we need to enter the event hash. The workshop details are accessible via https://tinyurl.com/ntucontlab. The repo for this even is 
 
@@ -276,6 +276,7 @@ In SageMaker Autopilot, its process is internally divided into multiple steps. A
 
 - Autopilot is capable of handling datasets up to 5 GB.
 - Autopilot can take a long time to explore the data and create the models, for example the process for this demo is 1-4 hours long. 
+- Canvas is using AutoML under the hood, Canvas just provides a interface where less code is required. 
 
 Amazon SageMaker Autopilot takes care of preprocessing your data for you. You do not need to perform conventional data preprocssing techniques such as handling missing values, converting categorical features to numeric features, scaling data, and handling more complicated data types.
 
@@ -289,7 +290,7 @@ test_data = data.drop(train_data.index)
 test_data_no_target = test_data.drop(columns=['y'])
 ```
 
-After uploading the dataset to Amazon S3, you can invoke Autopilot to find the best ML pipeline to train a model on this dataset. 
+The dataset used in this example is [Titanic - Machine Learning from Disaster](https://www.kaggle.com/c/titanic), in which we need to build models to predict the survival rate of each passenger. The features include age, name, gender, etc. After uploading the dataset to Amazon S3, you can invoke Autopilot to find the best ML pipeline to train a model on this dataset. 
 
 The required inputs for invoking a Autopilot job are:
 * Amazon S3 location for input dataset and for all output artifacts
