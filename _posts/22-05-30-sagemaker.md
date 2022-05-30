@@ -574,6 +574,8 @@ my_default_monitor_baseline = my_default_monitor.suggest_baseline(
 )
 ```
 
+The model monitoring could be used to check model drift and data drift. For instance, if you have developed a model to process postal codes in Singapore, but some users are located in UK, the model won't work well because the format for the postal codes are quite different. This type of issues can be captured via monitoring. 
+
 ## Conclusion 
 
 The admin account created for this workshop only lasts for three days, and does not have GPU access. We can save the contents to another account, or export to a github repo, my repo is [here](https://github.com/shanmo/amazon-sagemaker-immersion-day). 
