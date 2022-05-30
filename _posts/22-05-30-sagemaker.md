@@ -579,7 +579,12 @@ The model monitoring could be used to check model drift and data drift. For inst
 
 ## Conclusion 
 
-The admin account created for this workshop only lasts for three days, and does not have GPU access. We can save the contents to another account, or export to a github repo, my repo is [here](https://github.com/shanmo/amazon-sagemaker-immersion-day). 
+The admin account created for this workshop only lasts for three days, and does not have GPU access. We can save the contents to another account, or export to a github repo, my repo is [here](https://github.com/shanmo/amazon-sagemaker-immersion-day). The instructor shared some fun facts as well:
+
+- the user can create an instance that has M1 chip from Apple, since AWS has collaborated with Apple
+- Netflix uses AWS to do the graphics rendering, so all the work is done in the cloud
+
+
 
 
 
